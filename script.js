@@ -3,24 +3,26 @@ let display = document.querySelector("#display");
 let operators = document.querySelectorAll(".operator");
 display.innerText = "";
 let currentTotal = 0;
+let overallTotal = 0;
 let currentCalculation = [];
+let operatorsList = ["+", "-", "*", "/", "="];
+let currentEval = [];
 
-
-console.log(numbers);
 numbers.forEach(function(number) {
 
-    number.addEventListener("click", numberClick);
+ 
+    number.addEventListener("click", buttonclick);
 });
 
 operators.forEach(function(operator) {
 
     operator.addEventListener("click", operatorClick)
+    operator.addEventListener("click", buttonclick);
 });
 
 let add = function(num1, num2) {
 
     return num1 + num2;
-
 
 }
 
@@ -41,45 +43,74 @@ let divide = function(num1, num2) {
 
 function operate(operator, num1, num2) {
 
+    console.log(operator + "this is it")
+
     let operators = {
-        "add": add,
-        "times": multiply,
-        "divide": divide,
-        "subtract": subtract,
+        "+": add,
+        "*": multiply,
+        "/": divide,
+        "-": subtract,
     }
     let calc = operators[operator];
-    return calc(num1, num2);
+
+    return calc(parseInt(num1), parseInt(num2));
 }
 
-function numberClick(e) {
+function buttonclick(e) {  
 
-    let number = e.target.innerText;
-    currentTotal += e.target.innerText;
+    
 
-    display.innerText += number;
+    console.log(e.target.innerText)
+
+    if(isNotOperator(e.target.innerText)) {
+
+        currentTotal += e.target.innerText;
+        console.log(currentTotal);
+
+
+
+
+    }
+
+    display.innerText += e.target.innerText;
+
+    
 
     if (display.innerText.length > 15) {
 
         display.innerText = display.innerText.slice(1)
     }
 
+
+    
+
 }
+
+
 
 function operatorClick(e) {
 
-    if (currentCalculation.length === 0) {
+    let op = e.target.innerText;
+    let num1 = currentTotal;
+    let num2 = overallTotal;
 
-        currentCalculation.push(display.innerText);
-        currentCalculation.push(e.target.innerText);
-        
+    overallTotal = operate(op, num1, num2);
+    currentTotal = 0;
+    console.log(overallTotal + "totaql");  
+}
+
+
+function isNotOperator(target) {
+
+    for (i = 0; i <= operatorsList.length; i++) {
+
+        if (operatorsList[i] === target) {
+
+            
+            return false;
+        }
     }
 
-    console.log(currentCalculation);
-
-  
+    return true;
 }
 
-function updateDisplay(data) {
-
-    
-}
