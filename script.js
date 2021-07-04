@@ -1,10 +1,16 @@
 let numbers = document.querySelectorAll(".numberButton");
-let display = document.querySelector("#display");
+let display = document.querySelector("#displayBottom");
+let overallCalculationDisplay = document.querySelector("#displayTop");
 let operators = document.querySelectorAll(".operator");
+
+let overallCalculation = "";
+let canUseOperator = false;
+overallCalculationDisplay.innerText = "";
+
 display.innerText = "";
-let currentTotal = "";
+let currentInput = "";
 let overallTotal = 0;
-let operatorsList = ["+", "-", "*", "/", "="];
+const operatorsList = ["+", "-", "*", "/", "="];
 let currentEval = [];
 let lastOp = "";
 
@@ -18,7 +24,7 @@ numbers.forEach(function(number) {
 operators.forEach(function(operator) {
 
     operator.addEventListener("click", operatorClick)
-    operator.addEventListener("click", buttonclick);
+    
 });
 
 let add = function(num1, num2) {
@@ -46,7 +52,6 @@ let divide = function(num1, num2) {
 
 function operate(operator, num1, num2) {
 
-    console.log(operator + "this is it")
 
     let operators = {
         "+": add,
@@ -59,39 +64,53 @@ function operate(operator, num1, num2) {
     return calc(parseInt(num1), parseInt(num2));
 }
 
-function buttonclick(e) {    
-  
+function buttonclick(e) {        
 
-     if(isNotOperator(e.target.innerText) == true) {
-
-    currentTotal += e.target.innerText; 
-
-    }
-
+    currentInput += e.target.innerText; 
+    overallCalculation += e.target.innerText;
+    canUseOperator = true;
     display.innerText += e.target.innerText;
+    
 
     if (display.innerText.length > 15) {
 
         display.innerText = display.innerText.slice(1)
-    }      
+    }    
+    
+
+    console.log(currentInput + "this is the inpuit")
+    
 
 }
 
+function operatorClick(e) { 
 
-
-function operatorClick(e) {
     
-    currentEval.push(parseInt(currentTotal));   
+    if(canUseOperator == false) { 
 
-    if(currentEval.length< 2) {
+        return;
+    }
 
-        display.innerText = currentTotal;
-        currentTotal = 0;
-        lastOp = e.target.innerText;        
+    
+    
+    currentEval.push(parseInt(currentInput)); 
+
+
+
+
+    if(currentEval.length< 2) {      
+        
+        currentInput = 0;
+        lastOp = e.target.innerText;  
+        display.innerText += lastOp;
+        canUseOperator = false;  //
+        
         return;
     } 
 
-    if (currentEval.length == 2) {    
+   
+
+    if (currentEval.length == 2) {       
 
         overallTotal = operate(lastOp, parseInt(currentEval[0]), parseInt(currentEval[1]));
         currentEval= [];
@@ -99,10 +118,24 @@ function operatorClick(e) {
         lastOp = e.target.innerText;       
         
     }   
+
     
-    currentTotal = 0;   
-    display.innerText = overallTotal;
     
+    currentInput = 0; 
+   
+
+    if (isInt(overallTotal) == true) {
+
+        display.innerText = overallTotal + lastOp;
+    }
+
+    else {
+
+    display.innerText = Number.parseFloat(overallTotal).toPrecision(3) + lastOp;
+
+    }
+
+    canUseOperator = false; //calculation performed so next input should not be an operator
 }
 
 
@@ -120,4 +153,7 @@ function isNotOperator(target) {
     return true;
 }
 
+function isInt(n) {
 
+    return n % 1 === 0;
+}

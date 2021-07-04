@@ -114,11 +114,23 @@ body {
     overflow: hidden;
   
     letter-spacing: 0.06em;
+    display: grid;
+    grid-template-rows: 1fr 2fr;
+    
    
     
+}
+
+#displayTop {
+
+    grid-row: 1;
+}
+
+#displayBottom {
+
     
-   
-    
+
+    grid-row: 2;
 }
 
 
