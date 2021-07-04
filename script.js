@@ -2,11 +2,12 @@ let numbers = document.querySelectorAll(".numberButton");
 let display = document.querySelector("#display");
 let operators = document.querySelectorAll(".operator");
 display.innerText = "";
-let currentTotal = 0;
+let currentTotal = "";
 let overallTotal = 0;
-let currentCalculation = [];
 let operatorsList = ["+", "-", "*", "/", "="];
 let currentEval = [];
+let lastOp = "";
+
 
 numbers.forEach(function(number) {
 
@@ -27,6 +28,8 @@ let add = function(num1, num2) {
 }
 
 let subtract = function(num1, num2) {
+
+    console.log("here");
 
     return num1 - num2;
 }
@@ -56,47 +59,50 @@ function operate(operator, num1, num2) {
     return calc(parseInt(num1), parseInt(num2));
 }
 
-function buttonclick(e) {  
+function buttonclick(e) {    
+  
 
-    
+     if(isNotOperator(e.target.innerText) == true) {
 
-    console.log(e.target.innerText)
-
-    if(isNotOperator(e.target.innerText)) {
-
-        currentTotal += e.target.innerText;
-        console.log(currentTotal);
-
-
-
+    currentTotal += e.target.innerText; 
 
     }
 
     display.innerText += e.target.innerText;
 
-    
-
     if (display.innerText.length > 15) {
 
         display.innerText = display.innerText.slice(1)
-    }
-
-
-    
+    }      
 
 }
 
 
 
 function operatorClick(e) {
+    
+    currentEval.push(parseInt(currentTotal));   
 
-    let op = e.target.innerText;
-    let num1 = currentTotal;
-    let num2 = overallTotal;
+    if(currentEval.length< 2) {
 
-    overallTotal = operate(op, num1, num2);
-    currentTotal = 0;
-    console.log(overallTotal + "totaql");  
+        display.innerText = currentTotal;
+        currentTotal = 0;
+        lastOp = e.target.innerText;        
+        return;
+    } 
+
+    if (currentEval.length == 2) {    
+
+        overallTotal = operate(lastOp, parseInt(currentEval[0]), parseInt(currentEval[1]));
+        currentEval= [];
+        currentEval.push(overallTotal);
+        lastOp = e.target.innerText;       
+        
+    }   
+    
+    currentTotal = 0;   
+    display.innerText = overallTotal;
+    
 }
 
 
@@ -113,4 +119,5 @@ function isNotOperator(target) {
 
     return true;
 }
+
 
