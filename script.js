@@ -3,16 +3,16 @@ let display = document.querySelector("#displayBottom");
 let overallCalculationDisplay = document.querySelector("#displayTop");
 let operators = document.querySelectorAll(".operator");
 
-let overallCalculation = "";
 let canUseOperator = false;
 overallCalculationDisplay.innerText = "";
-
 display.innerText = "";
-let currentInput = "";
+let currentInput = 0;
 let overallTotal = 0;
 const operatorsList = ["+", "-", "*", "/", "="];
 let currentEval = [];
 let lastOp = "";
+
+
 
 
 numbers.forEach(function(number) {
@@ -47,7 +47,7 @@ let multiply = function(num1, num2) {
 
 let divide = function(num1, num2) {
 
-    return num1/num2;
+    return (num1/num2)
 }
 
 function operate(operator, num1, num2) {
@@ -61,81 +61,39 @@ function operate(operator, num1, num2) {
     }
     let calc = operators[operator];
 
-    return calc(parseInt(num1), parseInt(num2));
+    return calc(parseFloat(num1), parseFloat(num2));
 }
 
 function buttonclick(e) {        
 
-    currentInput += e.target.innerText; 
-    overallCalculation += e.target.innerText;
+    currentInput += e.target.innerText;
+ 
     canUseOperator = true;
-    display.innerText += e.target.innerText;
-    
+    display.innerText += e.target.innerText;    
 
     if (display.innerText.length > 15) {
 
         display.innerText = display.innerText.slice(1)
     }    
-    
 
-    console.log(currentInput + "this is the inpuit")
-    
+}
 
+function equals(e) {
+
+    if(currentEval.length < 2) {
+
+        return;
+    }
+    
 }
 
 function operatorClick(e) { 
 
-    
-    if(canUseOperator == false) { 
+}
 
-        return;
-    }
-
-    
-    
-    currentEval.push(parseInt(currentInput)); 
+function udateDisplay(number) {
 
 
-
-
-    if(currentEval.length< 2) {      
-        
-        currentInput = 0;
-        lastOp = e.target.innerText;  
-        display.innerText += lastOp;
-        canUseOperator = false;  //
-        
-        return;
-    } 
-
-   
-
-    if (currentEval.length == 2) {       
-
-        overallTotal = operate(lastOp, parseInt(currentEval[0]), parseInt(currentEval[1]));
-        currentEval= [];
-        currentEval.push(overallTotal);
-        lastOp = e.target.innerText;       
-        
-    }   
-
-    
-    
-    currentInput = 0; 
-   
-
-    if (isInt(overallTotal) == true) {
-
-        display.innerText = overallTotal + lastOp;
-    }
-
-    else {
-
-    display.innerText = Number.parseFloat(overallTotal).toPrecision(3) + lastOp;
-
-    }
-
-    canUseOperator = false; //calculation performed so next input should not be an operator
 }
 
 
