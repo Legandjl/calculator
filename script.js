@@ -4,15 +4,10 @@ let operators = document.querySelectorAll(".operator");
 
 
 display.innerText = "";
-let currentInput = 0;
-let overallTotal = 0;
+let currentInput = "";
 const operatorsList = ["+", "-", "*", "/", "="];
 let currentEval = {};
 let lastOp = "";
-
-
-
-
 
 numbers.forEach(function(number) {
 
@@ -51,9 +46,6 @@ let divide = function(num1, num2) {
 
 function operate(operator, num1, num2) {
 
-    console.log(operator + " oop")
-
-
     let operators = {
         "+": add,
         "*": multiply,
@@ -65,112 +57,130 @@ function operate(operator, num1, num2) {
     return calc(parseFloat(num1), parseFloat(num2));
 }
 
+
 function buttonclick(e) {        
 
-    currentInput += e.target.innerText;
- 
-    canUseOperator = true;
+    currentInput += e.target.innerText; 
     display.innerText += e.target.innerText;    
 
     if (display.innerText.length > 15) {
 
-        display.innerText = display.innerText.slice(1)
+        setDisplay(display.innerText.slice(1));
     }    
 
 }
 
+function operatorClick(e) {  
+    
+    if(e.target.innerText == "=") {
+
+        handleEvaluation(getLastOp());
+        setLastOp("");
+        return;
+    }
+
+    if(checkEvalForNum1() === false && currentInput != "") {
+        getCurrentEval().num1 = currentInput;
+        setLastOp(e.target.innerText);     
+        setDisplay(getCurrentEval().num1 + e.target.innerText)   
+        currentInput = "";
+        return;
+    }
+
+    if(checkEvalForNum1() == true && currentInput == "") {
+
+        setLastOp(e.target.innerText);
+        setDisplay(getCurrentEval().num1 + e.target.innerText)   
+    }
+  
+
+    else if((checkEvalForNum1() === true && currentInput != "")) {   
+
+        handleEvaluation(e.target.innerText);   
+        setLastOp(e.target.innerText); 
+        display.innerText += getLastOp();     
+    
+    }
+
+}
+
+function handleEvaluation(op) {
+
+    getCurrentEval().num2 = currentInput;
+    getCurrentEval().operator = getLastOp();  
+    let total = calculate(getCurrentEval());
+    resetValues();
+    getCurrentEval().num1 = total;    
+
+    if(isInt(total)){
+        setDisplay(total );
+    }
+
+    else {
+
+        setDisplay(total.toPrecision(4));
+    }
+
+}
+
+function calculate(number) {  
+
+    let num1 = parseFloat(number.num1);
+    let num2 = parseFloat(number.num2);
+    let operator = number.operator;
+    return  operate(operator, num1, num2); 
+  
+}
+
+
+
+function isInt(n) {
+
+    return n % 1 === 0;
+}
+
+
 function resetValues() {
 
     currentEval = new Object;
-    currentInput = 0;
+    currentInput = "";
 }
 
 function setLastOp(operator) {
 
     lastOp = operator;
-
-
 }
 
+function getLastOp() {
 
-function operatorClick(e) {   
-
-
-    
-
- 
-
-    if(!("num1" in currentEval)) {
-
-        console.log("here")
-
-    
-        currentEval.num1 = currentInput;
-        lastOp = e.target.innerText;
-        currentInput = 0;
-        return;
-    }
-
-  
-
-    else if("num1" in currentEval) {
-
-       
-
-        currentEval.num2 = currentInput;
-        currentEval.operator = lastOp;  
-
-        let total = calculate(currentEval);
-
-        resetValues();
-        currentEval.num1 = total;  
-        setLastOp(e.target.innerText);
-
-        console.log(total);
-
-    }
-  
-
+    return lastOp;
 }
 
+function getCurrentInput() {
 
-function calculate(number) {
-
-    console.log("here")
-
-    let num1 = parseFloat(number.num1);
-    let num2 = parseFloat(number.num2);
-    let operator = number.operator;
-    console.log(operator);
-    
-
-    return  operate(operator, num1, num2);
- 
- 
-  
+    return currentInput;
 }
 
-function udateDisplay(number) {
+function getCurrentEval() {
 
-
+    return currentEval;
 }
 
+function checkEvalForOperator() {
 
-function isNotOperator(target) {
+    let evaluation = getCurrentEval(); 
 
-    for (i = 0; i <= operatorsList.length; i++) {
-
-        if (operatorsList[i] === target) {
-
-            
-            return false;
-        }
-    }
-
-    return true;
+    return ("operator" in evaluation);
 }
 
-function isInt(n) {
+function checkEvalForNum1() {
 
-    return n % 1 === 0;
+    let evaluation = getCurrentEval();   
+
+    return ("num1" in evaluation);
+}
+
+function setDisplay(text){
+
+    display.innerText = text;
 }

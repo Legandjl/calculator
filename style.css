@@ -88,7 +88,7 @@ body {
        rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 
        0px -3px 5px;
        grid-template-rows: 1fr 2fr;
-       padding:20px;
+       padding:10px;
        
        background-color: #242424;
  
@@ -97,7 +97,7 @@ body {
 
 #display {
 
-    min-height: 120px;
+    min-height: 100px;
     grid-row: 1;
     border-style: solid;
     border-width: 2px;
@@ -110,6 +110,7 @@ body {
     align-content: center;
   
     padding:10px;
+    padding-top: 0px;
    
     overflow: hidden;
   
@@ -121,17 +122,7 @@ body {
     
 }
 
-#displayTop {
 
-    grid-row: 1;
-}
-
-#displayBottom {
-
-    
-
-    grid-row: 2;
-}
 
 
 
@@ -147,6 +138,7 @@ body {
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 5px;
     padding: 10px;
+    margin-bottom: 25px;
     align-self: center;
     
 }
