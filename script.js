@@ -140,7 +140,7 @@ function operatorClick(e) {
 
         try {
 
-            handleEquals("=");
+            handleEvaluation("=");
             setLastOp("");
             return;
 
@@ -196,33 +196,25 @@ function operatorClick(e) {
 
 
 
-function handleEquals(op) {
-
-    getCurrentEval().num2 = currentInput;
-    getCurrentEval().operator = getLastOp();
-    let total = calculate(getCurrentEval());
-
-    if(op == "=") {
-
-        resetValues();
-        currentInput = total;
-    }
-
-  
- 
-    setDisplay(total);
-  }
-
 function handleEvaluation(op) {
 
     getCurrentEval().num2 = currentInput;
     getCurrentEval().operator = getLastOp();
     let total = calculate(getCurrentEval());
     resetValues();
-    getCurrentEval().num1 = total;
+
+    if(op == "=") {
+        
+        currentInput = total;
+    }
+
+    else {
+
+        getCurrentEval().num1 = total;
+    }  
+ 
     setDisplay(total);
-   
-}
+  }
 
 function calculate(number) {
 
