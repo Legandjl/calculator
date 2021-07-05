@@ -10,7 +10,6 @@ let currentInput = "";
 const operatorsList = ["+", "-", "*", "/", "="];
 let currentEval = {};
 let lastOp = "";
-let overallTotal = ""; //unused
 
 numbers.forEach(function (number) {
 
@@ -26,51 +25,7 @@ operators.forEach(function (operator) {
 clearButton.addEventListener("click", clear);
 //deleteButton.addEventListener("click", undo);
 
-//calculator logic
 
-let add = function (num1, num2) {
-
-    return num1 + num2;
-
-}
-
-let subtract = function (num1, num2) {
-
-
-    return num1 - num2;
-}
-
-let multiply = function (num1, num2) {
-
-    return num1 * num2;
-}
-
-let divide = function (num1, num2) {
-
-    return (num1 / num2)
-}
-
-function operate(operator, num1, num2) {
-
-    let operators = {
-        "+": add,
-        "*": multiply,
-        "/": divide,
-        "-": subtract,
-    }
-
-    let calc = operators[operator];
-
-    let result = calc(parseFloat(num1), parseFloat(num2));
-
-    if (isInt(result)) {
-
-        return parseInt(result);
-    }
-
-
-    return parseFloat(result).toPrecision(4);
-}
 
 //gui
 
@@ -88,59 +43,12 @@ function buttonclick(e) {
 
 function operatorClick(e) {
 
-    //problem starts when we try to add more numbers to the returned result after evaluation
-    /* 22 + 22 = 44
-    at this point our evaluation has num1: 44;
-    then if i press 4 again
-    eval num1 still = 44
-    and current input = 4 (just pressed)
-    if i call an operator we get to line 126 and an error gets thrown
-    seemingly because its trying to evaluate with num1: 44 num2: curreninput and lastop as ""
-    error throws because last op is blank
-    need num1 to become num1 + 4 (string) so 444
-    and last op needs to become the operator just pressed
-    so its like starting back from the beginning wuth num2: blank
-
-
-    if(num1 and num2 exist and lastop = "")
-
-    num1 = num1 to string + num2 
-    num2 = nothing
-    last op = event
-    return
-
-    or
-
-    problem begins after evaluation
-
-    so if we have just completed an evaluation
-    set currentinput to the result
-    then if we type more numbers add them to current input until we press an operator
-    then proceed as normal
-    that way we start fresh with an empty object
-
-
-    */
-
-   /* if(checkEvalForNum1() && getLastOp() == "") {
-
-        console.log("trig")
-
-        resetAfterEval(e.target.innerText);
-        return;
-
-
-    }
-*/
-
-  
-
     if (e.target.innerText == "=" && currentInput != "") { //if user selects "=" try to evaluate
-        // return if user is trying to evaluate a non expression such as "33=". 
+        // return if user is trying to evaluate a non expression such as "33 =". 
 
         try {
 
-            handleEvaluation("=");
+            handleEvaluation(e.target.innerText);
             setLastOp("");
             return;
 
@@ -158,9 +66,7 @@ function operatorClick(e) {
         setDisplay(getCurrentEval().num1 + e.target.innerText)
         currentInput = "";
         return;
-    }
-
-    if (checkEvalForNum1() == true && currentInput == "" && e.target.innerText != "=") { //we have num1, so we are waiting for num2
+    } else if (checkEvalForNum1() == true && currentInput == "" && e.target.innerText != "=") { //we have num1, so we are waiting for num2
         //we set the operator to the one triggering the event, giving us num1 + operator, so you can switch between operators until you add a num2, 
         //prevents multi operators being inputted and stored,
         setLastOp(e.target.innerText);
@@ -176,25 +82,10 @@ function operatorClick(e) {
 
     }
 
-
-    /*
-
-    if (checkEvalForNum1() == true && getCurrentEval().num1 == "") {
-
-        console.log("reached 1")
-
-        getCurrentEval().num1 = parseInt(currentInput);
-    }
-
-    */
-
 }
 
 
 //helper functions
-
-
-
 
 function handleEvaluation(op) {
 
@@ -203,18 +94,16 @@ function handleEvaluation(op) {
     let total = calculate(getCurrentEval());
     resetValues();
 
-    if(op == "=") {
-        
-        currentInput = total;
-    }
+    if (op == "=") {
 
-    else {
+        currentInput = total;
+    } else {
 
         getCurrentEval().num1 = total;
-    }  
- 
+    }
+
     setDisplay(total);
-  }
+}
 
 function calculate(number) {
 
@@ -279,12 +168,6 @@ function checkEvalForNum1() {
     return ("num1" in evaluation);
 }
 
-function checkEvalForNum2() {
-
-    let evaluation = getCurrentEval();
-
-    return ("num2" in evaluation);
-}
 
 function setDisplay(text) {
 
@@ -315,3 +198,49 @@ function clear() {
     currentInput = "";
 }
 
+
+//calculator logic
+
+let add = function (num1, num2) {
+
+    return num1 + num2;
+
+}
+
+let subtract = function (num1, num2) {
+
+
+    return num1 - num2;
+}
+
+let multiply = function (num1, num2) {
+
+    return num1 * num2;
+}
+
+let divide = function (num1, num2) {
+
+    return (num1 / num2)
+}
+
+function operate(operator, num1, num2) {
+
+    let operators = {
+        "+": add,
+        "*": multiply,
+        "/": divide,
+        "-": subtract,
+    }
+
+    let calc = operators[operator];
+
+    let result = calc(parseFloat(num1), parseFloat(num2));
+
+    if (isInt(result)) {
+
+        return parseInt(result);
+    }
+
+
+    return parseFloat(result).toPrecision(4);
+}
