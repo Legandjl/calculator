@@ -1,6 +1,8 @@
 let numbers = document.querySelectorAll(".numberButton");
 let display = document.querySelector("#displayBottom");
 let operators = document.querySelectorAll(".operator");
+let clearButton = document.querySelector("#clear");
+let deleteButton = document.querySelector("#delete");
 
 
 display.innerText = "";
@@ -20,6 +22,9 @@ operators.forEach(function (operator) {
 
 });
 
+clearButton.addEventListener("click", clear);
+deleteButton.addEventListener("click", undo);
+
 //calculator functionality
 
 let add = function (num1, num2) {
@@ -30,7 +35,6 @@ let add = function (num1, num2) {
 
 let subtract = function (num1, num2) {
 
-    console.log("here");
 
     return num1 - num2;
 }
@@ -42,7 +46,7 @@ let multiply = function (num1, num2) {
 
 let divide = function (num1, num2) {
 
-    return (num1 / num2).toPrecision(4);
+    return (num1 / num2)
 }
 
 function operate(operator, num1, num2) {
@@ -53,14 +57,16 @@ function operate(operator, num1, num2) {
         "/": divide,
         "-": subtract,
     }
+
     let calc = operators[operator];
 
     let result = calc(parseFloat(num1), parseFloat(num2));
 
     if (isInt(result)) {
 
-        return result;
+        return parseInt(result);
     }
+
 
     return parseFloat(result).toPrecision(4);
 }
@@ -81,14 +87,21 @@ function buttonclick(e) {
 
 function operatorClick(e) {
 
-    if (e.target.innerText == "=" && currentInput!= "") {
+
+    if (e.target.innerText == "=" && currentInput != "") {
 
         handleEvaluation(getLastOp());
         setLastOp("");
         return;
     }
 
+    if (checkEvalForNum1() == true && getCurrentEval().num1 == "") {
+
+        getCurrentEval().num1 = parseInt(currentInput);
+    }
+
     if (checkEvalForNum1() === false && currentInput != "") {
+
         getCurrentEval().num1 = currentInput;
         setLastOp(e.target.innerText);
         setDisplay(getCurrentEval().num1 + e.target.innerText)
@@ -96,17 +109,21 @@ function operatorClick(e) {
         return;
     }
 
-    if (checkEvalForNum1() == true && currentInput == "" && e.target.innerText != "=") {       
+    if (checkEvalForNum1() == true && currentInput == "" && e.target.innerText != "=") {
+
+
+
 
         setLastOp(e.target.innerText);
         setDisplay(getCurrentEval().num1 + e.target.innerText)
         return;
 
-    } else if ((checkEvalForNum1() === true && currentInput != "")) {        
+    } else if ((checkEvalForNum1() === true && currentInput != "")) {
 
         handleEvaluation(e.target.innerText);
         setLastOp(e.target.innerText);
-        updateDisplayText(getLastOp)();
+        updateDisplayText(getLastOp());
+        return;
 
     }
 
@@ -138,7 +155,6 @@ function isInt(n) {
 
     return n % 1 === 0;
 }
-
 
 function resetValues() {
 
@@ -183,11 +199,33 @@ function checkEvalForNum1() {
 function setDisplay(text) {
 
     display.innerText = text;
+
+    if (display.innerText.length > 15) {
+
+        setDisplay(display.innerText.slice(1));
+    }
+
 }
 
 function updateDisplayText(text) {
 
     display.innerText += text;
+
+    if (display.innerText.length > 15) {
+
+        setDisplay(display.innerText.slice(1));
+    }
+
 }
 
+function clear() {
 
+    resetValues();
+    setDisplay("");
+    currentInput = "";
+}
+
+function undo() {
+
+
+}
