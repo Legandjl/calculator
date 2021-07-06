@@ -17,7 +17,7 @@ numbers.forEach(function (number) {
 });
 
 operators.forEach(function (operator) {
-operator.addEventListener("click", operatorClick)
+    operator.addEventListener("click", operatorClick)
 
 });
 
@@ -43,12 +43,10 @@ function addDec(e) {
 
     console.log("reached")
 
-    if(currentInput.includes(e.target.innerText)) {
+    if (currentInput.includes(e.target.innerText)) {
 
         return;
-    }
-
-    else {
+    } else {
 
         currentInput += e.target.innerText;
 
@@ -196,13 +194,16 @@ let add = function (num1, num2) {
 
 let subtract = function (num1, num2) {
 
-
     return num1 - num2;
 }
 
 let multiply = function (num1, num2) {
 
-    return num1 * num2;
+    console.log(num1 + "in calc")
+
+    console.log(num1 * num2)
+
+    return (num1 * num2);
 }
 
 let divide = function (num1, num2) {
@@ -211,6 +212,9 @@ let divide = function (num1, num2) {
 }
 
 function operate(operator, num1, num2) {
+
+    console.log(parseFloat(num1))
+    console.log(num2)
 
     let operators = {
         "+": add,
@@ -223,26 +227,25 @@ function operate(operator, num1, num2) {
 
     let result = calc(parseFloat(num1), parseFloat(num2));
 
-    if (isInt(result)) {
+    if (result % 1 === 0) {
 
-        return parseInt(result);
+        return result.toPrecision();
     }
 
-
-    return parseFloat(result).toPrecision(4);
+    return (result.toPrecision(2));
 }
 
 //del, clear and reset functions
 
 
-function undo() {   
+function undo() {
 
-    if(currentInput.length > 0) {       
-    
-    currentInput = currentInput.slice(0,-1);
-    display.innerText = display.innerText.slice(0,-1)   
+    if (currentInput.length > 0) {
 
-    }    
+        currentInput = currentInput.slice(0, -1);
+        display.innerText = display.innerText.slice(0, -1)
+
+    }
 }
 
 function clear() {
@@ -257,4 +260,3 @@ function resetValues() {
     currentEval = new Object;
     currentInput = "";
 }
-

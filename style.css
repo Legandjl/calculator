@@ -88,16 +88,16 @@ body {
        rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 
        0px -3px 5px;
        grid-template-rows: 1fr 2fr;
-       padding:10px;
-       
+       padding:10px;       
        background-color: #242424;
+       grid-gap: 20px;
  
        
 }
 
 #display {
 
-    min-height: 100px;
+    min-height: 120px;
     grid-row: 1;
     border-style: solid;
     border-width: 2px;
@@ -109,14 +109,15 @@ body {
     justify-content: end;
     align-content: center;
   
-    padding:10px;
-    padding-top: 0px;
+    
+    
    
     overflow: hidden;
   
     letter-spacing: 0.06em;
     display: grid;
     grid-template-rows: 1fr 2fr;
+    padding: 10px;
     
    
     
@@ -150,9 +151,15 @@ body {
     
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     outline: none;
-    color: white;
+    color:#D3D3D3;
     background-color: #1B1B1B;
     border-radius: 1%;
+}
+
+
+.calculatorButton:hover {
+
+    color: white;
 }
 
 #equals:active, button:active {
@@ -162,7 +169,25 @@ body {
 box-shadow: rgba(253, 251, 251, 0.61) 0px 0px 5px 0px, rgba(230, 223, 225, 0.753) 0px 0px 1px 0px;
   }
 
-  .delfunction {
+  #equals {
 
     grid-column: span 2;
   }
+
+  #delete {
+
+    grid-column: span 2;
+    font-size: 0.5em;
+  }
+
+  #delete:hover {
+
+    color:rgb(253, 143, 0)
+  }
+
+  #clear:hover {
+
+    color:rgb(255, 38, 0);
+  }
+
+  
