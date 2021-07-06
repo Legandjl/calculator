@@ -1,5 +1,6 @@
 let numbers = document.querySelectorAll(".numberButton");
 let display = document.querySelector("#displayBottom");
+let topDisplay = document.querySelector("#displayTop");
 let operators = document.querySelectorAll(".operator");
 let clearButton = document.querySelector("#clear");
 let deleteButton = document.querySelector("#delete");
@@ -7,7 +8,6 @@ let deleteButton = document.querySelector("#delete");
 
 display.innerText = "";
 let currentInput = "";
-const operatorsList = ["+", "-", "*", "/", "="];
 let currentEval = {};
 let lastOp = "";
 
@@ -23,9 +23,7 @@ operators.forEach(function (operator) {
 });
 
 clearButton.addEventListener("click", clear);
-//deleteButton.addEventListener("click", undo);
-
-
+deleteButton.addEventListener("click", undo);
 
 //gui
 
@@ -59,21 +57,21 @@ function operatorClick(e) {
         }
     }
 
-    if (checkEvalForNum1() == false && currentInput != "") { //we dont yet have a num1, but we know that an operator was pressed
+    if (checkEvalForProp("num1") == false && currentInput != "") { //we dont yet have a num1, but we know that an operator was pressed
         //and the currentInput is not empty - we set num1 to currentinput and store the operator for use when we get our next input,
         getCurrentEval().num1 = currentInput;
         setLastOp(e.target.innerText);
         setDisplay(getCurrentEval().num1 + e.target.innerText)
         currentInput = "";
         return;
-    } else if (checkEvalForNum1() == true && currentInput == "" && e.target.innerText != "=") { //we have num1, so we are waiting for num2
+    } else if (checkEvalForProp("num1") == true && currentInput == "" && e.target.innerText != "=") { //we have num1, so we are waiting for num2
         //we set the operator to the one triggering the event, giving us num1 + operator, so you can switch between operators until you add a num2, 
         //prevents multi operators being inputted and stored,
         setLastOp(e.target.innerText);
         setDisplay(getCurrentEval().num1 + e.target.innerText)
         return;
 
-    } else if ((checkEvalForNum1() === true && currentInput != "")) { //we know that we have number one ready to evaluate
+    } else if ((checkEvalForProp("num1") === true && currentInput != "")) { //we know that we have number one ready to evaluate
         //and we know currentInput contains a value, so we can put them together for evaluation,
         handleEvaluation(e.target.innerText);
         setLastOp(e.target.innerText);
@@ -83,7 +81,6 @@ function operatorClick(e) {
     }
 
 }
-
 
 //helper functions
 
@@ -95,8 +92,7 @@ function handleEvaluation(op) {
     resetValues();
 
     if (op == "=") {
-
-        currentInput = total;
+        currentInput = total.toString();
     } else {
 
         getCurrentEval().num1 = total;
@@ -112,26 +108,6 @@ function calculate(number) {
     let operator = number.operator;
     return operate(operator, num1, num2);
 
-}
-
-function resetAfterEval(op) {
-
-    let obj = getCurrentEval();
-    obj.num1 = obj.num1.toString() + obj.num2.toString();
-    delete obj.num2;
-    setLastOp(op);
-}
-
-
-function isInt(n) {
-
-    return n % 1 === 0;
-}
-
-function resetValues() {
-
-    currentEval = new Object;
-    currentInput = "";
 }
 
 function setLastOp(operator) {
@@ -154,20 +130,12 @@ function getCurrentEval() {
     return currentEval;
 }
 
-function checkEvalForOperator() {
+function checkEvalForProp(prop) {
 
     let evaluation = getCurrentEval();
 
-    return ("operator" in evaluation);
+    return (prop in evaluation);
 }
-
-function checkEvalForNum1() {
-
-    let evaluation = getCurrentEval();
-
-    return ("num1" in evaluation);
-}
-
 
 function setDisplay(text) {
 
@@ -188,18 +156,16 @@ function updateDisplayText(text) {
 
         setDisplay(display.innerText.slice(1));
     }
-
 }
-
-function clear() {
-
-    resetValues();
-    setDisplay("");
-    currentInput = "";
-}
-
 
 //calculator logic
+
+
+function isInt(n) {
+
+    return n % 1 === 0;
+}
+
 
 let add = function (num1, num2) {
 
@@ -244,3 +210,44 @@ function operate(operator, num1, num2) {
 
     return parseFloat(result).toPrecision(4);
 }
+
+
+function undo() {   
+
+    if(currentInput.length > 0) {       
+    
+    currentInput = currentInput.slice(0,-1);
+    display.innerText = display.innerText.slice(0,-1)   
+
+    }    
+}
+
+function clear() {
+
+    resetValues();
+    setDisplay("");
+    currentInput = "";
+}
+
+function resetValues() {
+
+    currentEval = new Object;
+    currentInput = "";
+}
+
+
+// 222 then operator 
+//current eval = 222 num1
+//delete all numbers so display is 2 current input it 2
+//get currenteval is still 222
+//last op is still +
+//even though we want to undo that
+//so we want it to work like
+/*
+
+if we delete numbers 
+num1 should be equal to what we have in current input after deletion
+if we delete an operator last op should be in its starting state
+that way we can perform a new calculation with the input we have
+
+*/
