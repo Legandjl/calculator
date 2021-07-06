@@ -4,6 +4,7 @@ let operators = document.querySelectorAll(".operator");
 let clearButton = document.querySelector("#clear");
 let deleteButton = document.querySelector("#delete");
 let decimal = document.querySelector("#decimal");
+document.addEventListener("keydown", keyPressed);
 
 
 display.innerText = "";
@@ -29,8 +30,20 @@ decimal.addEventListener("click", addDec);
 
 function buttonclick(e) {
 
-    currentInput += e.target.innerText;
-    updateDisplayText(e.target.innerText);
+    let text;    
+
+    if(e.type == "click") {
+
+         text = e.target.innerText;
+    }
+
+    else {
+
+        text = e.key.toString();
+    }
+
+    currentInput += text;
+    updateDisplayText(text);
 
     if (display.innerText.length > 15) {
 
@@ -41,36 +54,45 @@ function buttonclick(e) {
 
 function addDec(e) {
 
-    console.log("reached")
-
     if (currentInput.includes(e.target.innerText)) {
 
         return;
+
     } else {
 
         currentInput += e.target.innerText;
-
         updateDisplayText(e.target.innerText);
 
     }
-
 
 }
 
 function operatorClick(e) {
 
-    if (e.target.innerText == "=" && currentInput != "") { //if user selects "=" try to evaluate
+    let op;
+
+    if(e.type == "click") {
+
+        op = e.target.innerText;
+    }
+
+    else {
+
+        op = e.key.toString();
+    }
+
+    if (op == "=" && currentInput != "") { //if user selects "=" try to evaluate
         // return if user is trying to evaluate a non expression such as "33 =". 
 
         try {
 
-            handleEvaluation(e.target.innerText);
+            handleEvaluation(op);
             setLastOp("");
             return;
 
         } catch {
 
-            console.log("Try inputting a number")
+            console.log("Try inputting a number.")
             return;
         }
     }
@@ -78,22 +100,22 @@ function operatorClick(e) {
     if (checkEvalForProp("num1") == false && currentInput != "") { //we dont yet have a num1, but we know that an operator was pressed
         //and the currentInput is not empty - we set num1 to currentinput and store the operator for use when we get our next input,
         getCurrentEval().num1 = currentInput;
-        setLastOp(e.target.innerText);
-        setDisplay(getCurrentEval().num1 + e.target.innerText)
+        setLastOp(op);
+        setDisplay(getCurrentEval().num1 + op)
         currentInput = "";
         return;
 
-    } else if (checkEvalForProp("num1") == true && currentInput == "" && e.target.innerText != "=") { //we have num1, so we are waiting for num2
+    } else if (checkEvalForProp("num1") == true && currentInput == "" && op != "=") { //we have num1, so we are waiting for num2
         //we set the operator to the one triggering the event, giving us num1 + operator, so you can switch between operators until you add a num2, 
         //prevents multi operators being inputted and stored,
-        setLastOp(e.target.innerText);
-        setDisplay(getCurrentEval().num1 + e.target.innerText)
+        setLastOp(op);
+        setDisplay(getCurrentEval().num1 + op)
         return;
 
     } else if ((checkEvalForProp("num1") === true && currentInput != "")) { //we know that we have number one ready to evaluate
         //and we know currentInput contains a value, so we can put them together for evaluation,
-        handleEvaluation(e.target.innerText);
-        setLastOp(e.target.innerText);
+        handleEvaluation(op);
+        setLastOp(op);
         updateDisplayText(getLastOp());
         return;
 
@@ -199,10 +221,6 @@ let subtract = function (num1, num2) {
 
 let multiply = function (num1, num2) {
 
-    console.log(num1 + "in calc")
-
-    console.log(num1 * num2)
-
     return (num1 * num2);
 }
 
@@ -211,10 +229,7 @@ let divide = function (num1, num2) {
     return (num1 / num2)
 }
 
-function operate(operator, num1, num2) {
-
-    console.log(parseFloat(num1))
-    console.log(num2)
+function operate(operator, num1, num2) {  
 
     let operators = {
         "+": add,
@@ -244,7 +259,6 @@ function undo() {
 
         currentInput = currentInput.slice(0, -1);
         display.innerText = display.innerText.slice(0, -1)
-
     }
 }
 
@@ -259,4 +273,32 @@ function resetValues() {
 
     currentEval = new Object;
     currentInput = "";
+}
+
+function keyPressed(e) {
+
+    console.log(e.type)
+    console.log(e.key);
+
+    let keys = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    let operators = ["+", "-", "*", "/", "="];
+
+    console.log(keys.includes(e.key));
+    
+    if (keys.includes(e.key)) {
+
+       buttonclick(e);
+       
+    }
+
+    else if(operators.includes(e.key.toString())) {
+
+        console.log(e.key)
+
+        operatorClick(e);
+    }
+
+    
+
+
 }
