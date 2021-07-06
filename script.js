@@ -1,9 +1,9 @@
 let numbers = document.querySelectorAll(".numberButton");
 let display = document.querySelector("#displayBottom");
-let topDisplay = document.querySelector("#displayTop");
 let operators = document.querySelectorAll(".operator");
 let clearButton = document.querySelector("#clear");
 let deleteButton = document.querySelector("#delete");
+let decimal = document.querySelector("#decimal");
 
 
 display.innerText = "";
@@ -17,13 +17,13 @@ numbers.forEach(function (number) {
 });
 
 operators.forEach(function (operator) {
-
-    operator.addEventListener("click", operatorClick)
+operator.addEventListener("click", operatorClick)
 
 });
 
 clearButton.addEventListener("click", clear);
 deleteButton.addEventListener("click", undo);
+decimal.addEventListener("click", addDec);
 
 //gui
 
@@ -36,6 +36,26 @@ function buttonclick(e) {
 
         setDisplay(display.innerText.slice(1));
     }
+
+}
+
+function addDec(e) {
+
+    console.log("reached")
+
+    if(currentInput.includes(e.target.innerText)) {
+
+        return;
+    }
+
+    else {
+
+        currentInput += e.target.innerText;
+
+        updateDisplayText(e.target.innerText);
+
+    }
+
 
 }
 
@@ -52,7 +72,7 @@ function operatorClick(e) {
 
         } catch {
 
-            console.log("put another number in dummy")
+            console.log("Try inputting a number")
             return;
         }
     }
@@ -64,6 +84,7 @@ function operatorClick(e) {
         setDisplay(getCurrentEval().num1 + e.target.innerText)
         currentInput = "";
         return;
+
     } else if (checkEvalForProp("num1") == true && currentInput == "" && e.target.innerText != "=") { //we have num1, so we are waiting for num2
         //we set the operator to the one triggering the event, giving us num1 + operator, so you can switch between operators until you add a num2, 
         //prevents multi operators being inputted and stored,
@@ -211,6 +232,8 @@ function operate(operator, num1, num2) {
     return parseFloat(result).toPrecision(4);
 }
 
+//del, clear and reset functions
+
 
 function undo() {   
 
@@ -235,19 +258,3 @@ function resetValues() {
     currentInput = "";
 }
 
-
-// 222 then operator 
-//current eval = 222 num1
-//delete all numbers so display is 2 current input it 2
-//get currenteval is still 222
-//last op is still +
-//even though we want to undo that
-//so we want it to work like
-/*
-
-if we delete numbers 
-num1 should be equal to what we have in current input after deletion
-if we delete an operator last op should be in its starting state
-that way we can perform a new calculation with the input we have
-
-*/
