@@ -6,7 +6,6 @@ let deleteButton = document.querySelector("#delete");
 let decimal = document.querySelector("#decimal");
 document.addEventListener("keydown", keyPressed);
 
-
 display.innerText = "";
 let currentInput = "";
 let currentEval = {};
@@ -15,16 +14,21 @@ let lastOp = "";
 numbers.forEach(function (number) {
 
     number.addEventListener("click", buttonclick);
+    number.addEventListener("transitionend", removeClasses);
 });
 
 operators.forEach(function (operator) {
     operator.addEventListener("click", operatorClick)
+    operator.addEventListener("transitionend", removeClasses)
 
 });
 
 clearButton.addEventListener("click", clear);
+clearButton.addEventListener("transitionend", removeClasses);
 deleteButton.addEventListener("click", undo);
+deleteButton.addEventListener("transitionend", removeClasses);
 decimal.addEventListener("click", addDec);
+decimal.addEventListener("transitionend", removeClasses);
 
 //gui
 
@@ -54,14 +58,26 @@ function buttonclick(e) {
 
 function addDec(e) {
 
-    if (currentInput.includes(e.target.innerText)) {
+    let dec;
+
+    if(e.type == "click") {
+
+        dec = e.target.innerText;
+    }
+
+    else {
+
+        dec = e.key.toString();
+    }
+
+    if (currentInput.includes(dec)) {
 
         return;
 
     } else {
 
-        currentInput += e.target.innerText;
-        updateDisplayText(e.target.innerText);
+        currentInput += dec;
+        updateDisplayText(dec);
 
     }
 
@@ -275,30 +291,66 @@ function resetValues() {
     currentInput = "";
 }
 
-function keyPressed(e) {
+function keyPressed(e) { 
 
-    console.log(e.type)
-    console.log(e.key);
 
-    let keys = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    let operators = ["+", "-", "*", "/", "="];
+    let keys = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",];
+    let ops = ["+", "-", "*", "/", "="];    
+    let del = "Delete";
+    let wipe = "c";
+    let dec = ".";
 
-    console.log(keys.includes(e.key));
+    if(e.key == ".") {
+
+        decimal.classList.add("clicked");
+        addDec(e);
+    }
+
+    if (del == (e.key)) {
+
+        deleteButton.classList.add("clicked");
+        undo();
+        return;
+    }
+
+    if(wipe == e.key) {
+
+        clearButton.classList.add("clicked");
+        clear();
+        return;        
+    }
     
     if (keys.includes(e.key)) {
 
-       buttonclick(e);
+        numbers.forEach(function(number) {            
+
+            if(number.innerText == e.key.toString()) {
+
+                number.classList.add("clicked");
+              
+            }
+        });
+
+       buttonclick(e);      
        
     }
 
-    else if(operators.includes(e.key.toString())) {
+    else if(ops.includes(e.key)) {
 
-        console.log(e.key)
+        operators.forEach(function (currentOp) {
+           
+            if(currentOp.innerText == e.key.toString()) {
+
+                currentOp.classList.add("clicked");
+            }
+        });
 
         operatorClick(e);
     }
+}
 
-    
+function removeClasses(e) {
 
+    e.target.classList.remove("clicked");
 
 }

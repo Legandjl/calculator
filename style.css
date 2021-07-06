@@ -158,6 +158,11 @@ body {
 
 }
 
+button {
+
+    transition: all 0.1s;
+}
+
 #calcWrap {
 
     display: grid;
@@ -234,7 +239,7 @@ body {
 button:active {
 
 
-    scale: 0.9;
+    scale: 0.91;
     box-shadow: rgba(253, 251, 251, 0.61) 0px 0px 5px 0px, rgba(230, 223, 225, 0.753) 0px 0px 1px 0px;
 }
 
@@ -262,4 +267,10 @@ button:active {
 #equals:hover {
 
     color: rgba(16, 206, 16, 0.822);
+}
+
+.clicked {
+
+    scale: 0.91;
+    box-shadow: rgba(253, 251, 251, 0.61) 0px 0px 5px 0px, rgba(230, 223, 225, 0.753) 0px 0px 1px 0px;
 }
