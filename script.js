@@ -294,6 +294,8 @@ function resetValues() {
     currentInput = "";
 }
 
+//keyboard support - somewhat messy as I added it at the end and want to move on to the next stage of the course.
+
 function keyPressed(e) { 
 
 
