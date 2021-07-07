@@ -6,6 +6,8 @@ let deleteButton = document.querySelector("#delete");
 let decimal = document.querySelector("#decimal");
 document.addEventListener("keydown", keyPressed);
 
+document.addEventListener("keyup", removeClasses);
+
 display.innerText = "";
 let currentInput = "";
 let currentEval = {};
@@ -27,6 +29,7 @@ clearButton.addEventListener("click", clear);
 clearButton.addEventListener("transitionend", removeClasses);
 deleteButton.addEventListener("click", undo);
 deleteButton.addEventListener("transitionend", removeClasses);
+
 decimal.addEventListener("click", addDec);
 decimal.addEventListener("transitionend", removeClasses);
 
@@ -302,20 +305,20 @@ function keyPressed(e) {
 
     if(e.key == ".") {
 
-        decimal.classList.add("clicked");
+        decimal.classList.toggle("clicked");
         addDec(e);
     }
 
     if (del == (e.key)) {
 
-        deleteButton.classList.add("clicked");
+        deleteButton.classList.toggle("clicked");
         undo();
         return;
     }
 
     if(wipe == e.key) {
 
-        clearButton.classList.add("clicked");
+        clearButton.classList.toggle("clicked");
         clear();
         return;        
     }
@@ -326,7 +329,7 @@ function keyPressed(e) {
 
             if(number.innerText == e.key.toString()) {
 
-                number.classList.add("clicked");
+                number.classList.toggle("clicked");
               
             }
         });
@@ -341,7 +344,7 @@ function keyPressed(e) {
            
             if(currentOp.innerText == e.key.toString()) {
 
-                currentOp.classList.add("clicked");
+                currentOp.classList.toggle("clicked");
             }
         });
 
