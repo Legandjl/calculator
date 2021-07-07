@@ -6,8 +6,6 @@ let deleteButton = document.querySelector("#delete");
 let decimal = document.querySelector("#decimal");
 document.addEventListener("keydown", keyPressed);
 
-document.addEventListener("keyup", removeClasses);
-
 display.innerText = "";
 let currentInput = "";
 let currentEval = {};
@@ -27,6 +25,7 @@ operators.forEach(function (operator) {
 
 clearButton.addEventListener("click", clear);
 clearButton.addEventListener("transitionend", removeClasses);
+
 deleteButton.addEventListener("click", undo);
 deleteButton.addEventListener("transitionend", removeClasses);
 
@@ -144,31 +143,6 @@ function operatorClick(e) {
 
 //helper functions
 
-function handleEvaluation(op) {
-
-    getCurrentEval().num2 = currentInput;
-    getCurrentEval().operator = getLastOp();
-    let total = calculate(getCurrentEval());
-    resetValues();
-
-    if (op == "=") {
-        currentInput = total.toString();
-    } else {
-
-        getCurrentEval().num1 = total;
-    }
-
-    setDisplay(total);
-}
-
-function calculate(number) {
-
-    let num1 = parseFloat(number.num1);
-    let num2 = parseFloat(number.num2);
-    let operator = number.operator;
-    return operate(operator, num1, num2);
-
-}
 
 function setLastOp(operator) {
 
@@ -267,6 +241,32 @@ function operate(operator, num1, num2) {
     }
 
     return (result.toPrecision(2));
+}
+
+function handleEvaluation(op) {
+
+    getCurrentEval().num2 = currentInput;
+    getCurrentEval().operator = getLastOp();
+    let total = calculate(getCurrentEval());
+    resetValues();
+
+    if (op == "=") {
+        currentInput = total.toString();
+    } else {
+
+        getCurrentEval().num1 = total;
+    }
+
+    setDisplay(total);
+}
+
+function calculate(number) {
+
+    let num1 = parseFloat(number.num1);
+    let num2 = parseFloat(number.num2);
+    let operator = number.operator;
+    return operate(operator, num1, num2);
+
 }
 
 //del, clear and reset functions
